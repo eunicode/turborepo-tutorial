@@ -2,7 +2,7 @@ name: Continuous Preview Release
 
 on:
   push:
-    branches: [main]
+    branches: [continuous-release-pkg-pr-new]
 
 jobs:
   preview-release:
