@@ -1,5 +1,7 @@
 # Turborepo starter
 
+[![pkg.pr.new](https://pkg.pr.new/badge/eunicode/turborepo-tutorial?style=flat&color=000&logoSize=auto)](https://pkg.pr.new/~/eunicode/turborepo-tutorial)
+
 This is an official Yarn v1 starter turborepo.
 
 ## What's inside?
