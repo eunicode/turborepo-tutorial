@@ -1,0 +1,55 @@
+name: Continuous Preview Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  preview-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies with Yarn
+        run: yarn install --frozen-lockfile
+
+      - name: Run pkg-pr-new for all packages
+        # env:
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx pkg-pr-new publish './packages/*'
+
+
+# This workflow is triggered on pushes to the main branch and runs the pkg-pr-new command
+# for all packages in the monorepo to generate preview release pull requests.
+# name: Preview Release
+
+# on:
+  # push:
+    # branches:
+      # - main
+
+# jobs:
+#   preview-release:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '18'
+#           cache: 'npm'
+
+#       - name: Install dependencies
+#         run: npm install
+
+#       - name: Run pkg-pr-new for all packages
+#         run: npx pkg-pr-new
