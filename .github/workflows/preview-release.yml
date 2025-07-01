@@ -36,6 +36,7 @@ jobs:
         # env:
           # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx pkg-pr-new@0.0 publish './packages/*' --packageManager=pnpm
+        run: npx pkg-pr-new publish './packages/*'
 
 
 # This workflow is triggered on pushes to the main branch and runs the pkg-pr-new command
