@@ -1,13 +1,31 @@
 name: Continuous Preview Release 
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [opened, reopened, synchronize]
+    # skip CI for pure docs/config changes
+    paths-ignore:
+      - '.github/**'
+      - '.vscode/**'
+      - 'docs/**'
+      - 'examples/**'
+      - '*.md'
+      - '.editorconfig'
+      - '.gitignore'
+      - '.npmrc'
+
+# Ensures only the latest workflow for a given PR runs; previous ones are canceled if new commits are pushed quickly.      
+# This concurrency group ensures that only the latest workflow for a pull request runs,
+# canceling any in-progress workflows for the same pull request.
+concurrency:
+  group: continuous-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,12 +45,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'yarn'
 
       - name: Install dependencies with Yarn
         run: yarn install --frozen-lockfile
 
+      # Build all packages in the monorepo to prepare for publishing
+      - name: Build packages
+        run: yarn build
+
+      # The pkg-pr-new command is used to publish preview releases for all packages in the monorepo.
       - name: Run pkg-pr-new for all packages
-        run: npx pkg-pr-new@0.0 publish './packages/*' --packageManager=pnpm 
+        run: npx pkg-pr-new publish './packages/*' --packageManager=pnpm 
 
 
 # This workflow is triggered on pushes to the main branch and runs the pkg-pr-new command
