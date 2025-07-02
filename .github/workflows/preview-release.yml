@@ -1,9 +1,9 @@
 name: Continuous Preview Release 
 
 on:
-  # Publish approved pull requests only
-  pull_request_review:
-    types: [submitted]
+  push:
+    branches:
+      - main
 
 jobs:
   check:
